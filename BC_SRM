@@ -1,0 +1,39 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © jacdelosreyes013
+
+
+//@version=4
+study("Benjamin Cowen's Simplified Risk Metric")
+    
+var colorway = color.white
+sma_50 = sma(close, 50)
+sma_350 = sma(close, 350)
+newsma = sma_50/sma_350
+    
+rescale(_src, _oldMin, _oldMax, _newMin, _newMax) =>
+    _newMin + (_newMax - _newMin) * (_src - _oldMin) / max(_oldMax - _oldMin, 10e-10)
+
+risk_metric = rescale(newsma, 0, 3, 0, 1)
+
+if (risk_metric >=1) 
+    colorway := color.red
+else if (risk_metric >= 0.9) 
+    colorway := color.orange 
+else if (risk_metric >= 0.8) 
+    colorway := color.yellow 
+else if (risk_metric >= 0.7) 
+    colorway := color.lime 
+else if (risk_metric >= 0.6) 
+    colorway := color.green 
+else if (risk_metric >= 0.5) 
+    colorway := color.aqua
+else if (risk_metric >= 0.4) 
+    colorway := color.blue 
+else if (risk_metric >= 0.3) 
+    colorway := color.navy 
+else if (risk_metric >= 0.2) 
+    colorway := color.purple 
+else if (risk_metric >= 0.1) 
+    colorway := color.fuchsia
+
+plot(risk_metric, color=colorway, title="Risk Metric")
